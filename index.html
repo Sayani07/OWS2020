@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Visualizing probability distributions across   bivariate cyclic temporal granularities</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <meta name="date" content="2020-08-09" />
+    <link href="libs/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <link href="libs/font-awesome-animation-1.0/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome-5.0.13/js/fontawesome-all.min.js"></script>
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> 
+    -->
+    <link rel="icon" href="images/favicon.ico"  type='image/x-icon'/>
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-logo.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom.css" type="text/css" />
+    <link rel="stylesheet" href="assets/demo.css" type="text/css" />
+    <link rel="stylesheet" href="timeline.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Visualizing probability distributions across <br> bivariate cyclic temporal granularities
+## Presented by Sayani Gupta
+### August 9, 2020
+
+---
+
+
+
+
+
+background-image: url(images/grey-yellow.png)
+background-size: cover
+class: hide-slide-number split-70 title-slide
+count: false
+
+.column.shade_black[.content[
+
+&lt;br&gt;
+
+# .monash-white.outline-text[Visualizing probability distributions across &lt;br&gt; bivariate cyclic temporal granularities]
+
+&lt;h2 class="monash-blue2 outline-text" style="font-size: 30pt!important;"&gt;&lt;/h2&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Presented by Sayani Gupta&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Joint work with Professor Dianne Cook and Rob Hyndman
+
+Department of Econometrics and Business Statistics
+
+<span>&lt;i class="fas  fa-envelope faa-float animated "&gt;&lt;/i&gt;</span>  Sayani.Gupta@monash.edu
+
+August 9, 2020 @ NUMBATS Seminar | Melbourne, Australia
+
+
+
+&lt;br&gt;
+]
+
+
+]]
+
+
+
+&lt;div class="column transition monash-m-new delay-1s" style="clip-path:url(#swipe__clip-path);"&gt;
+&lt;div class="background-image" style="background-image:url('images/large.png');background-position: center;background-size:cover;margin-left:3px;"&gt;
+&lt;svg class="clip-svg absolute"&gt;
+&lt;defs&gt;
+&lt;clipPath id="swipe__clip-path" clipPathUnits="objectBoundingBox"&gt;
+&lt;polygon points="0.5745 0, 0.5 0.33, 0.42 0, 0 0, 0 1, 0.27 1, 0.27 0.59, 0.37 1, 0.634 1, 0.736 0.59, 0.736 1, 1 1, 1 0, 0.5745 0" /&gt;
+&lt;/clipPath&gt;
+&lt;/defs&gt;	
+&lt;/svg&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+
+
+---
+class: center
+
+
+
+
+class: top left 
+
+# Linear to cyclic
+
+.pull-left[
+.checked[
+.smaller[
+- **Cyclic time granularities:** exploring different periodicities e.g. hour-of-day, day-of-month or  hour-of-week, day-of-semester
+
+- **Multiple observations for each level of cyclic granularity**
+
+- summarize distribution of measured variables
+]
+]
+]
+
+.pull-right[
+![](index_files/figure-html/linear2cyclic-.gif)&lt;!-- --&gt;
+]
+---
+class: top left 
+
+# Summarize distribution
+
+.pull-left[
+.checked[
+.smaller[
+- **Cyclic time granularities:** exploring different periodicities e.g. hour-of-day, day-of-month or  hour-of-week, day-of-semester
+
+- Multiple observations for each level of cyclic granularity
+
+- **summarize distribution of measured variables**
+]
+]
+]
+
+.pull-right[
+![](index_files/figure-html/allplot-.gif)&lt;!-- --&gt;
+]
+---
+class: top left
+
+# Data structure and graphical mapping
+
+.left-column[
+&lt;br&gt;
+&lt;br&gt;
+-  extension of tsibble data structure
+-  choose any two cyclic granularities: 
+`\(C_i = \{A_1, A_2, \dots, A_K\}\)` and `\(C_j = \{B_1, B_2, \dots, B_L\}\)`
+- graphical mapping `\((C_i, C_j, v)\)`
+
+- `\(^{N_C}P_2\)` displays
+]
+
+.right-column[
+
+&lt;img src="images/graphical_map.png" width="90%" /&gt;
+
+]
+---
+class:left, top
+
+# Relationship of cyclic granularities
+
+.pull-left[
+**&lt;span style="color:firebrick"&gt; &lt;i&gt; Clashes&lt;/i&gt;:** pairs leading to empty sets
+
+&lt;img src="index_files/figure-html/clash-1.png" width="100%" /&gt;
+
+]
+
+.pull-right[
+**&lt;span style="color:firebrick"&gt; &lt;i&gt; Harmonies&lt;/i&gt;:** pairs leading to no empty sets
+
+
+
+&lt;img src="index_files/figure-html/noclash-1.png" width="100%" /&gt;
+]
+
+Still too many harmonies for display for large `\(N_C\)`
+---
+# Selecting harmonies with significant variation
+
+.pull-left[
+&lt;img src="index_files/figure-html/question1-1.png" width="200%" /&gt;
+]
+
+.pull-right[
+- significant differences between categories: &lt;br&gt; (a) no (b) yes
+- Gestalt theory
+- efficiently capture within and between group variation 
+- compute threshold
+ ]
+---
+# Rank selected harmonies &lt;br&gt; Median Maximum Pairwise Distance (MMPD)
+
+.pull-left[
+![](index_files/figure-html/questioncric-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+- rank harmonies (b) &gt; (a)
+- distances between probability distribution through Jensen-Shannon divergences
+- normalizing constants through Fisher–Tippett–Gnedenko theorem
+]
+---
+R package `gravitas`
+
+.pull-left[
+.animated.bounce[
+&lt;img src="images/gravitas_sticker.png" height=280px&gt;
+]
+]
+
+.pull-right[
+* construction of cyclic granularities and cyclic calendar algebra 
+* check feasibility through harmony/clash
+* select significant harmonies and rank them
+* recommend prospective probability distributions 
+]
+---
+class: top left
+
+
+## An example : Electricity smart meter data
+
+&lt;i&gt;&lt;small&gt;Data source&lt;/i&gt;&lt;/small&gt; : [&lt;small&gt;&lt;i&gt;Department of the Environment and Energy, Australia&lt;/i&gt;&lt;/small&gt;](https://data.gov.au/dataset/4e21dea3-9b87-4610-94c7-15a8a77907ef)
+
+
+```
+## # A tsibble: 293,874 x 3 [30m] &lt;UTC&gt;
+## # Key:       customer_id [10]
+##    customer_id reading_datetime    general_supply_kwh
+##    &lt;chr&gt;       &lt;dttm&gt;                           &lt;dbl&gt;
+##  1 10006414    2012-02-10 08:00:00              0.141
+##  2 10006414    2012-02-10 08:30:00              0.088
+##  3 10006414    2012-02-10 09:00:00              0.078
+##  4 10006414    2012-02-10 09:30:00              0.151
+##  5 10006414    2012-02-10 10:00:00              0.146
+##  6 10006414    2012-02-10 10:30:00              0.077
+##  7 10006414    2012-02-10 11:00:00              0.052
+##  8 10006414    2012-02-10 11:30:00              0.055
+##  9 10006414    2012-02-10 12:00:00              0.055
+## 10 10006414    2012-02-10 12:30:00              0.252
+## # … with 293,864 more rows
+```
+---
+
+# Cyclic granularities considered for analysis
+
+
+```
+## [1] "hour_day"   "hour_week"  "hour_month" "day_week"   "day_month" 
+## [6] "week_month" "wknd_wday"
+```
+&lt;br&gt;
+&lt;br&gt; 
+
+# Number of displays to analyze for exhaustive exploration
+
+There are `\(^{7}P_2 = 42\)` pair of granularities to look at placing one on the x-axis and the other on facet.
+---
+
+# Results: Select only harmonies (16 out of 42 selected)
+
+&lt;table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;background-color: white !important;"&gt; facet &lt;/th&gt;
+   &lt;th style="text-align:left;background-color: white !important;"&gt; x-axis &lt;/th&gt;
+   &lt;th style="text-align:right;background-color: white !important;"&gt; facet levels &lt;/th&gt;
+   &lt;th style="text-align:right;background-color: white !important;"&gt; x levels &lt;/th&gt;
+   &lt;th style="text-align:right;background-color: white !important;"&gt; MMPD &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_week &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_month &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 31 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.064 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; wknd_wday &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_month &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 31 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.060 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; wknd_wday &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; hour_day &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 24 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.044 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_week &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; hour_day &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 24 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.024 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; week_month &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; hour_day &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 24 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.023 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; hour_day &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_month &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 24 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 31 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.016 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_month &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; wknd_wday &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 31 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.014 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_month &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_week &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 31 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.011 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_month &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; hour_day &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 31 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 24 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.009 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; hour_day &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; wknd_wday &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 24 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.009 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; week_month &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; wknd_wday &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.007 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_week &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; week_month &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.004 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; wknd_wday &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; week_month &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.003 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; hour_day &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; week_month &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 24 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.003 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; week_month &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_week &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; hour_day &lt;/td&gt;
+   &lt;td style="text-align:left;color: black !important;background-color: white !important;font-size: 18px;"&gt; day_week &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 24 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;color: black !important;background-color: white !important;font-size: 18px;"&gt; 0.001 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+class: top left
+
+# Results: Select significant harmonies and rank them &lt;br&gt;( 6 out of 16 selected)
+
+&lt;img src="images/threshold.png" width="100%" /&gt;
+
+---
+class: top left
+
+
+# Results: Recommended plots for selected harmonies
+
+ Many levels - quantile plot selected
+ Lower levels - boxplot selected
+
+---
+class: middle center
+
+# More Information
+
+Slides: https://sayanigupta-numbats.netlify.com/   
+
+Materials: https://github.com/Sayani07/NUMBATS2020 
+
+Slides created with &lt;i&gt; Rmarkdown, knitr, xaringan, xaringanthemer&lt;/i&gt;
+
+## Thank you
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'assets/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
