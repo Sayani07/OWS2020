@@ -7,23 +7,19 @@ count: false
 
 <br>
 
-# .monash-white.outline-text[`r rmarkdown::metadata$title`]
-
 <h2 class="monash-blue2 outline-text" style="font-size: 30pt!important;">`r rmarkdown::metadata$week`</h2>
 
 <br>
-
-<h2 style="font-weight:900!important;">`r rmarkdown::metadata$subtitle`</h2>
 
 .bottom_abs.width100[
 
 Joint work with Professor Dianne Cook and Rob Hyndman
 
 Department of Econometrics and Business Statistics
-
+<br>
+Monash University
+<br>
 `r anicon::faa("envelope", animate="float")`  `r rmarkdown::metadata$email`
-
-`r rmarkdown::metadata$date` @ NUMBATS Seminar | Melbourne, Australia
 
 
 

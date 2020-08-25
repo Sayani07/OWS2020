@@ -14,6 +14,8 @@ library(lvplot)
 library(magrittr)
 library(countdown)
 library(gghdr)
+library(htmltools)
+library(transformr)
 #remotes::install_github("njtierney/palap")
 #library(palap)
 sm <- smart_meter10 %>%
@@ -452,16 +454,25 @@ ggarrange(p1cric, p2cric, nrow = 2, labels = c("a", "b"))
 
 
 ##----global_harmony
-global_harmony <- sm %>%
-  global_threshold(harmony_tbl = harmonies,
-                   response = "general_supply_kwh", nsamp = 5) %>%
-  rename(`facet variable` = facet_variable,
-         `x-axis variable` = x_variable,
-         `facet levels` = facet_levels,
-         `x-axis levels` = x_levels) %>% 
-  mutate(MMPD = if_else(gt_MMPD == TRUE,
-                        paste0(MMPD, "*"), paste0(MMPD))) %>%
-  select(`facet variable`,`x-axis variable`,
-         `facet levels`,`x-axis levels` ,MMPD) 
+# global_harmony <- sm %>%
+#   global_threshold(harmony_tbl = harmonies,
+#                    response = "general_supply_kwh", nsamp = 5) %>%
+#   rename(`facet variable` = facet_variable,
+#          `x-axis variable` = x_variable,
+#          `facet levels` = facet_levels,
+#          `x-axis levels` = x_levels) 
+# 
+# 
+# global_harmony1 <- global_harmony %>% 
+#   mutate(MMPD = if_else(gt_MMPD == TRUE,
+#                 paste0(MMPD, "*"), paste0(MMPD)))%>%
+#   select(`facet variable`,`x-axis variable`,
+#          `facet levels`,`x-axis levels` ,MMPD) 
+# 
+# global_harmony1
 
-global_harmony
+knitr::include_graphics("images/global_harmony2.png")
+
+##----load-data
+knitr::include_graphics("images/smart_allcust.gif")
+

@@ -20,3 +20,5 @@ lvplot
 magrittr
 countdown
 gghdr
+htmltools
+transformr
